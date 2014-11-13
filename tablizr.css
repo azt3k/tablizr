@@ -1,0 +1,34 @@
+.sort-trigger {
+    cursor: pointer;
+}
+
+@media (max-width: 767px) {
+    .pinned {
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: #fff;
+        width: 35%;
+        overflow: hidden;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        border-right: 1px solid #ccc;
+        border-left: 1px solid #ccc;
+    }
+    div.table-wrapper {
+        white-space: nowrap;
+        position: relative;
+        margin-bottom: 20px;
+        overflow: hidden;
+        border-right: 1px solid #ccc;
+    }
+    div.scrollable {
+        margin-left: 35%;
+        overflow: scroll;
+        overflow-y: hidden;
+    }
+    div.scrollable th:first-child,
+    div.scrollable td:first-child{
+        display: none;
+    }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "tabelizr",
+  "version": "0.1.3",
+  "repo": "azt3k/tablizr",
+  "homepage": "https://github.com/azt3k/tabelizr",
+  "description": "provides a cross browser way to measure the height and width of a dom element that always excludes the scrollbar",
+  "keywords": [
+    "height",
+    "width",
+    "tabelizr",
+    "jquery"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "jquery": "~1.11.1",
+    "dimensionator": ">=0.1.0",
+    "gush": ">=0.1.0"
+  },
+  "main": "tabelizr.js",
+  "development": {},
+  "ignore": []
+}

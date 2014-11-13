@@ -1,0 +1,4 @@
+#!/bin/bash
+
+OUTPUT=$(uglifyjs tablizr.js -m -r '$,require,exports')
+echo ";$OUTPUT" > tablizr.min.js
