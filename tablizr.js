@@ -7,7 +7,7 @@
     "use strict"
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.1",
+        pluginVersion = "0.1.2",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
@@ -16,6 +16,9 @@
             sort: true,
             respond: true,
             classSwitchOnly: false,
+            sortHandler: null,
+            onBeforeSort: null,
+            onAfterSort: null,
             css : {
                 'pinned': {
                     'position': 'absolute',
@@ -174,42 +177,98 @@
             var $wrapper,
                 $table,
                 $th,
+                $og,
                 $tbody = $elem.find('tbody'),
                 $trs = $tbody.find('tr'),
                 self = this,
+                conf = this.settings,
+                sorter = conf.sortHandler,
+                preCB = conf.onBeforeSort,
                 isSorted = $heading.is('.sorted-asc, .sorted-desc'),
                 sortTo = $heading.is('.sorted-asc') ? 'desc' : 'asc';
 
-            // do the sort
-            $trs.sort(function(a,b) {
+            // on Before Sort
+            if (typeof preCB == 'function') preCB();
 
-                var an = self.extractVal($(a), col),
-                    bn = self.extractVal($(b), col),
-                    cmp = an.toLowerCase().localeCompare(bn.toLowerCase());
+            // Sort
+            if (sorter && typeof sorter == 'function') {
 
-                return (!isSorted || sortTo == 'asc') ? cmp : cmp * -1;
+                sorter({
+                    'el': $elem,
+                    'rows': $trs,
+                    'col': col,
+                    'isSorted': isSorted,
+                    'sortDirection': sortTo,
+                    'tablizr': this
+                });
 
-            });
+            } else {
+
+                // do the sort
+                $trs.sort(function(a,b) {
+
+                    var an = self.extractVal($(a), col),
+                        bn = self.extractVal($(b), col),
+                        cmp = an.toLowerCase().localeCompare(bn.toLowerCase());
+
+                    return (!isSorted || sortTo == 'asc') ? cmp : cmp * -1;
+
+                });
+
+                // apply the sort
+                this.applySort($trs, col, sortTo);
+            }
+
+        },
+
+        applySort: function($tr, col, sortTo) {
+
+            var $elem = this.$element,
+                conf = this.settings,
+                postCB = conf.onAfterSort,
+                $wrapper,
+                $heading,
+                $og,
+                $cp,
+                $cpNew;
+
+            // ensure we are working with the original
+            if ($elem.is('.pinned table'))
+                $elem = $elem.closest('.table-wrapper').find('.scrollable table');
 
             // handle class switching
+            $heading = $($elem.find('tr').first().find('th, td')[col]);
             $elem.find('tr').first().find('td, th').removeClass('sorted-asc').removeClass('sorted-desc');
             $heading.addClass(sortTo == 'asc' ? 'sorted-asc' : 'sorted-desc');
 
-            // apply the sort
-            $trs.detach().appendTo($tbody);
-
-            // propagate to other table if in responsive mode.
+            // check if it's in responsive mode
             if ($elem.is('.table-wrapper table')) {
+
+                // get elems
                 $wrapper = $elem.closest('.table-wrapper');
-                $table = $elem.is('.pinned table') ? $wrapper.find('.scrollable table') : $wrapper.find('.pinned table');
-                if ($table.is('.origin')) {
-                    $table.removeClass('origin');
-                } else {
-                    $elem.addClass('origin');
-                    $th = $($table.find('tr').first().find('th, td')[col]);
-                    this.sort($table, $th, col);
-                }
+                $og = $wrapper.find('.scrollable table');
+                $cp = $wrapper.find('.pinned table');
+
+                // apply the sort to the original
+                $tr.detach();
+                $og.find('tbody').html('').append($tr);
+
+                // handle the copy
+                $cpNew = $og.clone();
+                this.attachSort($cpNew);
+                $cp.replaceWith($cpNew);
+
+                // apply the styles
+                this.applyStyleFirstChild($og, $cpNew);
+                this.setCellHeights($og, $cpNew);
+
+            } else {
+                $elem.find('tbody').append($tr.detach());
             }
+
+            // after sort callback
+            if (typeof postCB == 'function') postCB();
+
         },
 
         findHeading: function(col, $table) {
@@ -284,8 +343,7 @@
                 id = this.$element.attr('data-id');
 
             // control visibility
-            $og.find('td:first-child, th:first-child').css('display', 'none');
-            $cp.find('td:not(:first-child), th:not(:first-child)').css('display', 'none');
+            this.applyStyleFirstChild($og, $cp)
 
             // finish htmling
             $og.closest(".table-wrapper").append($cp);
@@ -316,6 +374,13 @@
             $og.find('td:first-child, th:first-child').css('display', '');
         },
 
+        applyStyleFirstChild: function($og, $cp) {
+            $og.find('td, th').css('display', '');
+            $og.find('td:first-child, th:first-child').css('display', 'none');
+            $cp.find('td, th').css('display', '');
+            $cp.find('td:not(:first-child), th:not(:first-child)').css('display', 'none');
+        },
+
         setCellHeights: function($og, $cp) {
 
             var $tr = $og.find('tr'),
@@ -343,4 +408,5 @@
     };
 
 })(jQuery, window, document);
+
 

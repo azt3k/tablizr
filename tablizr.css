@@ -25,6 +25,7 @@
     div.scrollable {
         margin-left: 35%;
         overflow: scroll;
+        -webkit-overflow-scrolling: touch;
         overflow-y: hidden;
     }
     div.scrollable th:first-child,

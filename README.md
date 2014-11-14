@@ -12,6 +12,9 @@ Options / Defaults
     sort: true,
     respond: true,
     classSwitchOnly: false,
+    sortHandler: null,
+    onBeforeSort: null,
+    onAfterSort: null,
     css : {
         'pinned': {
             'position': 'absolute',
@@ -25,6 +28,7 @@ Options / Defaults
         'scrollable': {
             'margin-left': '35%',
             'overflow': 'scroll',
+            '-webkit-overflow-scrolling': 'touch',
             'overflow-y': 'hidden'
         },
         'table-wrapper': {
@@ -44,6 +48,16 @@ Options / Defaults
 - `sort`: enables / disables the row sorter
 - `respond`: enables / disable the responsive tables
 - `classSwitchOnly`: enables \ disables the use of inline styles in case you want greater control over the css used
+- `sortHandler`: a function that defines how the sort occurs - tabelizr passes the supplied function a conf object with the following properties:
+    - `el`: a jquery object representing the attached table
+    - `rows`: a jquery object representing the rows
+    - `col`: the index of the column being sorted
+    - `isSorted`: a boolean that indicates if the column already has a sort direction applied
+    - `sortDirection`: a string that indicates the sort direction - `asc` or `desc`
+    - `tablizr`: the tablizr plugin object
+    - Once finished manipulating the rows you need to call `conf.tablizr.applySort(rows, col, sortDirection);` to apply the sort - see `demo-ajax-sort.html` for an example
+- `onBeforeSort`: a callback function to run prior to the sort
+- `onAfterSort`: a callback fucntion to run after the sort
 - `css`: controls what inline styles are being applied when the table goes into responsive mode.
 
 ## Sorting

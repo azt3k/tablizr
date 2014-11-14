@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<!--[if !IE]><!-->
+<html>
+<!--<![endif]-->
+<!--[if IE 6 ]><html class="ie ie6"><![endif]-->
+<!--[if IE 7 ]><html class="ie ie7"><![endif]-->
+<!--[if IE 8 ]><html class="ie ie8"><![endif]-->
+
+    <head>
+        <title>Tabelizr Demo</title>
+        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;">
+        <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+        <style type="text/css">
+            .container {
+                max-width:990px;
+                margin:auto;
+            }
+            .back-btn {
+                margin-top: 20px;
+            }
+            .sorted-asc:after, .sorted-desc:after {
+                display: inline-block;
+                font-family: "Glyphicons Halflings";
+                font-style: normal;
+                font-weight: 400;
+                line-height: 1;
+                position: relative;
+                top: 1px;
+            }
+            .sorted-asc:after {
+                content: "";
+            }
+            .sorted-desc:after {
+                content: "";
+            }
+            .loader {
+                display: none;
+            }
+            .loading .loader {
+                display: block;
+                position: fixed;
+                background: rgba(0,0,0,0.5);
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
+            .loading .loader div{
+                color: #ffffff;
+                height: 30px;
+                line-height: 30px;
+                width: 100px;
+                text-align: center;
+                top:50%;
+                left:50%;
+                margin-top: -15px;
+                margin-left: -50px;
+                position: absolute;
+            }
+        </style>
+        <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="https://rawgit.com/azt3k/dimensionator/master/dimensionator.min.js"></script>
+        <script src="https://rawgit.com/azt3k/gush/master/gush.min.js"></script>
+        <script src="tablizr.js"></script>
+        <script type="text/javascript" language="javascript">
+            $(function() {
+                $('table').tablizr({
+                    sortHandler: function(conf) {
+
+                        var $table = conf.el,
+                            $trs = conf.rows,
+                            col = conf.col,
+                            isSorted = conf.isSorted,
+                            sortTo = conf.sortDirection,
+                            _this = conf.tablizr;
+
+                        $('html').addClass('loading');
+
+                        $.get('demo-ajax-sort.html', function(data) {
+
+                            $trsNew = $(data).find('table tbody tr');
+                            $table.find('tbody').html('').append($trsNew);
+
+                            $trsNew.sort(function(a,b) {
+
+                                var an = _this.extractVal($(a), col),
+                                    bn = _this.extractVal($(b), col),
+                                    cmp = an.toLowerCase().localeCompare(bn.toLowerCase());
+
+                                return (!isSorted || sortTo == 'asc') ? cmp : cmp * -1;
+
+                            });
+
+                            _this.applySort($trsNew, col, sortTo);
+
+                            $('html').removeClass('loading');
+
+                        });
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="output"></div>
+        <div class="container">
+            <a href="index.html" class="back-btn pull-right btn btn-default"><span class="glyphicon glyphicon-arrow-left"></span> Back</a>
+            <h1>External CSS Demo</h1>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Perk</th>
+                        <th>Description</th>
+                        <th>ID</th>
+                        <th>Skill Req</th>
+                        <th>Perk Req</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Steel Smithing</td>
+                        <td>Can create Steel armor and weapons at forges, and improve them twice as much.</td>
+                        <td>000cb40d</td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Arcane Blacksmith</td>
+                        <td>You can improve magical weapons and armor.</td>
+                        <td>0005218e</td>
+                        <td>60 Smithing</td>
+                        <td>Steel Smithing</td>
+                    </tr>
+                    <tr>
+                        <td>Dwarven Smithing</td>
+                        <td>Can create Dwarven armor and weapons at forges, and improve them twice as much.</td>
+                        <td>000cb40e</td>
+                        <td>30 Smithing</td>
+                        <td>Steel Smithing</td>
+                    </tr>
+                    <tr>
+                        <td>Orcish Smithing</td>
+                        <td>Can create Orcish armor and weapons at forges, and improve them twice as much.</td>
+                        <td>000cb410</td>
+                        <td>50 Smithing</td>
+                        <td>Dwarven Smithing</td>
+                    </tr>
+                    <tr>
+                        <td>Ebony Smithing</td>
+                        <td>Can create Ebony armor and weapons at forges, and improve them twice as much.</td>
+                        <td>000cb412</td>
+                        <td>80 Smithing</td>
+                        <td>Orcish Smithing</td>
+                    </tr>
+                    <tr>
+                        <td>Daedric Smithing</td>
+                        <td>Can create Daedric armor and weapons at forges, and improve them twice as much.</td>
+                        <td>000cb413</td>
+                        <td>90 Smithing</td>
+                        <td>Ebony Smithing</td>
+                    </tr>
+                    <tr>
+                        <td>Elven Smithing</td>
+                        <td>Can create Elven armor and weapons at forges, and improve them twice as much.</td>
+                        <td>000cb40f</td>
+                        <td>30 Smithing</td>
+                        <td>Steel Smithing</td>
+                    </tr>
+                    <tr>
+                        <td>Advanced Armors</td>
+                        <td>Can create Scaled and Plate armor at forges, and improve them twice as much.</td>
+                        <td>000cb414</td>
+                        <td>50 Smithing</td>
+                        <td>Elven Smithing</td>
+                    </tr>
+                    <tr>
+                        <td>Glass Smithing</td>
+                        <td>Can create Glass armor and weapons at forges, and improve them twice as much.</td>
+                        <td>000cb411</td>
+                        <td>70 Smithing</td>
+                        <td>Advanced Armors</td>
+                    </tr>
+                    <tr>
+                        <td>Dragon Armor</td>
+                        <td>Can create Dragon armor at forges, and improve them twice as much.</td>
+                        <td>00052190</td>
+                        <td>100 Smithing</td>
+                        <td>Daedric Smithing or Glass Smithing</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="loader"><div>Loading...</div></div>
+    </body>
+
+</html>
