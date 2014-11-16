@@ -7,7 +7,7 @@
     "use strict"
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.2",
+        pluginVersion = "0.1.4",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
@@ -276,7 +276,7 @@
         },
 
         extractVal: function($row, col) {
-            var $elem = $($row.find('td')[col]);
+            var $elem = $($row.find('td,th')[col]);
             var val = $elem.attr('data-sort');
             return val == undefined ? ($elem[0].textContent || $elem[0].innerText || "") : val;
         },
