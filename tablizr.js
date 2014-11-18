@@ -7,7 +7,7 @@
     "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.5",
+        pluginVersion = "0.1.6",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
@@ -64,7 +64,7 @@
             // add the class!
             $elem.addClass('tablizr');
 
-            // ensure we have a uid
+            // ensure we have a uid - using data id because we need to clone the table in responsive mode
             if (!id) {
                 while (!id || $('[data-id="' + id +'"]').length) {
                     id = Math.floor(Math.random() * 1000) + 1;
@@ -175,8 +175,10 @@
         sort: function($elem, $heading, col) {
 
             // on Before Sort
-            if (typeof conf.onBeforeSort == 'function') conf.onBeforeSort(this);
+            if (typeof this.settings.onBeforeSort == 'function')
+                this.settings.onBeforeSort(this);
 
+            // vars
             var $wrapper,
                 $table,
                 $th,

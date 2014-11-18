@@ -99,3 +99,11 @@ Limitations
 
 - the sort functionality doesn't work on nested tables or tables that use colspan or rowspan.
 - the sort functionality assumes that the first row is the heading row
+
+
+Todo
+----
+
+- provide a more automated way of attaching ajax sorts
+- allow for more data attribute overrides
+- improve pagr support
