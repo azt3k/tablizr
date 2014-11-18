@@ -4,10 +4,10 @@
 
 ;(function($, window, document, undefined) {
 
-    "use strict"
+    "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.4",
+        pluginVersion = "0.1.5",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
@@ -66,7 +66,7 @@
 
             // ensure we have a uid
             if (!id) {
-                while (!id || $('#' + id).length) {
+                while (!id || $('[data-id="' + id +'"]').length) {
                     id = Math.floor(Math.random() * 1000) + 1;
                 }
                 $elem.attr('data-id', id);
@@ -174,6 +174,9 @@
 
         sort: function($elem, $heading, col) {
 
+            // on Before Sort
+            if (typeof conf.onBeforeSort == 'function') conf.onBeforeSort(this);
+
             var $wrapper,
                 $table,
                 $th,
@@ -183,12 +186,8 @@
                 self = this,
                 conf = this.settings,
                 sorter = conf.sortHandler,
-                preCB = conf.onBeforeSort,
                 isSorted = $heading.is('.sorted-asc, .sorted-desc'),
                 sortTo = $heading.is('.sorted-asc') ? 'desc' : 'asc';
-
-            // on Before Sort
-            if (typeof preCB == 'function') preCB();
 
             // Sort
             if (sorter && typeof sorter == 'function') {
@@ -267,7 +266,7 @@
             }
 
             // after sort callback
-            if (typeof postCB == 'function') postCB();
+            if (typeof postCB == 'function') postCB(this);
 
         },
 
