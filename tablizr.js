@@ -7,7 +7,7 @@
     "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.6",
+        pluginVersion = "0.1.7",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
@@ -160,12 +160,15 @@
 
                 var $this = $(this);
 
-                $this.on('tap, click', function(e) {
-                    self.sort($elem, $this, i);
-                }).addClass('sort-trigger');
+                if (!$this.is('.no-sort')) {
 
-                if (!self.settings.classSwitchOnly) {
-                    $this.css(self.cssConf('sort-trigger'));
+                    $this.on('tap, click', function(e) {
+                        self.sort($elem, $this, i);
+                    }).addClass('sort-trigger');
+
+                    if (!self.settings.classSwitchOnly) {
+                        $this.css(self.cssConf('sort-trigger'));
+                    }
                 }
 
             });
