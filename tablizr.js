@@ -7,7 +7,7 @@
     "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.8",
+        pluginVersion = "0.1.9",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
