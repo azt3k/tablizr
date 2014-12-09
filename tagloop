@@ -1,0 +1,5 @@
+TAGSTR=$(git tag)
+for TAG in $(echo $TAGSTR | tr "\n" "\n")
+do
+	echo "- $TAG"
+done

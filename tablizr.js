@@ -7,7 +7,7 @@
     "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.7",
+        pluginVersion = "0.1.8",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
@@ -162,7 +162,7 @@
 
                 if (!$this.is('.no-sort')) {
 
-                    $this.on('tap, click', function(e) {
+                    $this.off('tap.tablizr click.tablizr').on('tap.tablizr click.tablizr', function(e) {
                         self.sort($elem, $this, i);
                     }).addClass('sort-trigger');
 
@@ -310,12 +310,12 @@
 
             var self = this;
 
-            $(window).on("redraw",function(){
+            $(window).off("redraw.tablizr").on("redraw.tablizr",function(){
                 switched = false;
                 self.updateTables();
             });
 
-            $(window).on("resize",function(){
+            $(window).off("resize.tablizr").on("resize.tablizr",function(){
                 self.updateTables();
             });
 
