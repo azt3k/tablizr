@@ -7,7 +7,7 @@
     "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.9",
+        pluginVersion = "0.1.10",
         switched = false,
         cssCache = {},
         styleAttrCache = {},
@@ -162,7 +162,10 @@
 
                 if (!$this.is('.no-sort')) {
 
-                    $this.off('tap.tablizr click.tablizr').on('tap.tablizr click.tablizr', function(e) {
+                    // need to add in some blocking so it doesn't fire more than once on
+                    // i.e. click and tap - maybe look to see if tap exists and use that preferentially
+                    // $this.off('tap.tablizr click.tablizr').on('tap.tablizr click.tablizr', function(e) {
+                    $this.off('click.tablizr').on('click.tablizr', function(e) {
                         self.sort($elem, $this, i);
                     }).addClass('sort-trigger');
 

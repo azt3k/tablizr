@@ -1,6 +1,6 @@
 {
   "name": "tablizr",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "provides a cross browser way to measure the height and width of a dom element that always excludes the scrollbar",
   "main": "labelizr.js",
   "scripts": {
