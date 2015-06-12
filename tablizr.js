@@ -8,7 +8,6 @@
 
     var pluginName = "tablizr",
         pluginVersion = "0.1.10",
-        switched = false,
         cssCache = {},
         styleAttrCache = {},
         defaults = {
@@ -50,6 +49,7 @@
     function Plugin(element, options) {
         this.$element = $(element);
         this.settings = $.extend(true, {}, defaults, options);
+        this.switched = false,
         this.init();
     }
 
@@ -313,12 +313,12 @@
 
             var self = this;
 
-            $(window).off("redraw.tablizr").on("redraw.tablizr",function(){
-                switched = false;
+            $(window).off("redraw.tablizr" + this.$element.attr('data-id')).on("redraw.tablizr",function(){
+                this.switched = false;
                 self.updateTables();
             });
 
-            $(window).off("resize.tablizr").on("resize.tablizr",function(){
+            $(window).off("resize.tablizr" + this.$element.attr('data-id')).on("resize.tablizr",function(){
                 self.updateTables();
             });
 
@@ -330,13 +330,13 @@
             var $elem = this.$element,
                 br = this.settings.breakpoint;
 
-            if (($('body').dim('w') < br) && !switched) {
-                switched = true;
+            if (($('body').dim('w') < br) && !this.switched) {
+                this.switched = true;
                 if (this.settings.sort) this.attachSort(this.splitTable($elem));
                 else this.splitTable($elem);
                 return true;
-            } else if (switched && ($('body').dim('w') > br)) {
-                switched = false;
+            } else if (this.switched && ($('body').dim('w') > br)) {
+                this.switched = false;
                 this.unsplitTable($elem);
             }
         },
@@ -347,8 +347,9 @@
             $og.wrap('<div class="table-wrapper" />');
 
             // set vars
-            var $cp = $og.clone(),
-                id = this.$element.attr('data-id');
+            var $cp = $og.clone();
+
+            console.log(this.$element);
 
             // control visibility
             this.applyStyleFirstChild($og, $cp)
