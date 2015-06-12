@@ -333,6 +333,7 @@
             if (($('body').dim('w') < br) && !switched) {
                 switched = true;
                 if (this.settings.sort) this.attachSort(this.splitTable($elem));
+                else this.splitTable($elem);
                 return true;
             } else if (switched && ($('body').dim('w') > br)) {
                 switched = false;
@@ -415,5 +416,3 @@
     };
 
 })(jQuery, window, document);
-
-
