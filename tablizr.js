@@ -7,7 +7,7 @@
     "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.10",
+        pluginVersion = "0.1.13",
         cssCache = {},
         styleAttrCache = {},
         defaults = {
@@ -349,7 +349,7 @@
             // set vars
             var $cp = $og.clone();
 
-            console.log(this.$element);
+            // console.log(this.$element);
 
             // control visibility
             this.applyStyleFirstChild($og, $cp)
