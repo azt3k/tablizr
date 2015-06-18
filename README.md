@@ -11,6 +11,7 @@ Options / Defaults
     breakpoint: 767,
     sort: true,
     respond: true,
+    respondStyle: 'split',
     classSwitchOnly: false,
     sortHandler: null,
     onBeforeSort: null,
@@ -24,6 +25,11 @@ Options / Defaults
             'width': '35%',
             'overflow': 'hidden',
             'overflow-x': 'auto'
+        },
+        'table-wrapper-nosplit': {
+            'overflow': 'scroll',
+            '-webkit-overflow-scrolling': 'touch',
+            'overflow-y': 'hidden'
         },
         'scrollable': {
             'margin-left': '35%',
@@ -41,12 +47,13 @@ Options / Defaults
             'cursor': 'pointer'
         }
     }
-}
+};
 ````
 
 - `breakpoint`: the point at which the responsive tables kick in (the pixel width of the screen)
 - `sort`: enables / disables the row sorter
 - `respond`: enables / disable the responsive tables
+- `respondStyle`: `split` or `nosplit` - split pins first col in place and make others scrollable, nosplit makes entire table scrollable
 - `classSwitchOnly`: enables \ disables the use of inline styles in case you want greater control over the css used
 - `sortHandler`: a function that defines how the sort occurs - tabelizr passes the supplied function a conf object with the following properties:
     - `el`: a jquery object representing the attached table

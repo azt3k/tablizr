@@ -7,13 +7,14 @@
     "use strict";
 
     var pluginName = "tablizr",
-        pluginVersion = "0.1.13",
+        pluginVersion = "0.2.0",
         cssCache = {},
         styleAttrCache = {},
         defaults = {
             breakpoint: 767,
             sort: true,
             respond: true,
+            respondStyle: 'split', // split || nosplit
             classSwitchOnly: false,
             sortHandler: null,
             onBeforeSort: null,
@@ -27,6 +28,11 @@
                     'width': '35%',
                     'overflow': 'hidden',
                     'overflow-x': 'auto'
+                },
+                'table-wrapper-nosplit': {
+                    'overflow': 'scroll',
+                    '-webkit-overflow-scrolling': 'touch',
+                    'overflow-y': 'hidden'
                 },
                 'scrollable': {
                     'margin-left': '35%',
@@ -123,6 +129,11 @@
                 cssCache[id]['sort-trigger'] = $.extend({}, {
 
                 }, this.settings.css['sort-trigger']);
+
+                // no split
+                cssCache[id]['table-wrapper-nosplit'] = $.extend({}, {
+
+                }, this.settings.css['table-wrapper-nosplit']);
 
             }
 
@@ -328,17 +339,57 @@
         updateTables: function() {
 
             var $elem = this.$element,
+                conf = this.settings,
                 br = this.settings.breakpoint;
 
+
             if (($('body').dim('w') < br) && !this.switched) {
+
                 this.switched = true;
-                if (this.settings.sort) this.attachSort(this.splitTable($elem));
-                else this.splitTable($elem);
+
+                if (conf.splitStyle == 'split') {
+                    if (this.settings.sort) this.attachSort(this.splitTable($elem));
+                    else this.splitTable($elem);
+                } else {
+                    this.noSplitTable($elem);
+                }
+
                 return true;
+
             } else if (this.switched && ($('body').dim('w') > br)) {
+
                 this.switched = false;
-                this.unsplitTable($elem);
+
+                if (conf.splitStyle == 'split') {
+                    this.unSplitTable($elem);
+                } else {
+                    this.unNoSplitTable($elem);
+                }
             }
+        },
+
+        noSplitTable: function($og) {
+
+            // do wrap first
+            $og.wrap('<div class="table-wrapper-nosplit" />');
+
+            // apply styles if needed
+            if (!this.settings.classSwitchOnly) {
+                $og.closest('.table-wrapper-nosplit').css(this.cssConf('table-wrapper-nosplit'));
+            }
+
+            // apply awesome fix
+            $og.closest('.table-wrapper-nosplit').gush({y: false});
+
+            // is this necessary (yes)
+            this.setCellHeights($og);
+
+            return $og;
+
+        },
+
+        unNoSplitTable: function ($og) {
+            $og.unwrap();
         },
 
         splitTable: function($og) {
@@ -376,7 +427,7 @@
 
         },
 
-        unsplitTable: function ($og) {
+        unSplitTable: function ($og) {
             $og.closest(".table-wrapper").find(".pinned").remove();
             $og.unwrap();
             $og.unwrap();
@@ -393,7 +444,7 @@
         setCellHeights: function($og, $cp) {
 
             var $tr = $og.find('tr'),
-                $tr_cp = $cp.find('tr'),
+                $tr_cp = $cp == undefined ? $([]) : $cp.find('tr'),
                 heights = [];
 
             $tr.each(function(index) {
